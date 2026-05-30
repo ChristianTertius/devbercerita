@@ -2,6 +2,10 @@ package main
 
 import (
 	"ChristianTertius/devbercerita/internal/config"
+	"ChristianTertius/devbercerita/internal/handler/user"
+	userRepo "ChristianTertius/devbercerita/internal/repository/user"
+	userService "ChristianTertius/devbercerita/internal/service/user"
+	"ChristianTertius/devbercerita/pkg/internalsql"
 	"context"
 	"fmt"
 	"log"
@@ -11,13 +15,16 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 func main() {
 	r := gin.Default()
+	validate := validator.New()
 
 	cfg, err := config.LoadConfig()
 
+	db, err := internalsql.ConnectMysql(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,6 +37,14 @@ func main() {
 			"message": "it's work! berjalan yeyeyey",
 		})
 	})
+
+	userRepo := userRepo.NewRepository(db)
+
+	userService := userService.NewService(cfg, userRepo)
+
+	userHandler := user.NewHandler(r, validate, userService)
+
+	userHandler.RouteList(cfg.SecretJwt)
 
 	addr := fmt.Sprintf("0.0.0.0:%s", cfg.Port)
 	srv := &http.Server{
