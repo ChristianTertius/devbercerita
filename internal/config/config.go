@@ -32,8 +32,8 @@ func LoadConfig() (*Config, error) {
 		DBHost:         getEnv("DB_HOST", "localhost"),
 		DBUser:         getEnv("DB_USER", "root"),
 		DBName:         getEnv("DB_NAME", "devbercerita"),
-		DBPort:         getEnv("DB_PORT", "8080"),
-		DBPassword:     getEnv("db_password", "jjj"),
+		DBPort:         getEnv("DB_PORT", "3306"),
+		DBPassword:     getEnv("DB_PASSWORD", "jjj"),
 		AppEnv:         getEnv("app_env", "development"),
 	}, nil
 }
