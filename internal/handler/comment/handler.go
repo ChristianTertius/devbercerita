@@ -1,0 +1,29 @@
+package comment
+
+import (
+	"ChristianTertius/devbercerita/internal/middleware"
+	"ChristianTertius/devbercerita/internal/service/comment"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+)
+
+type Handler struct {
+	api            *gin.Engine
+	validate       *validator.Validate
+	commentService comment.CommentService
+}
+
+func NewHandler(api *gin.Engine, validate *validator.Validate, commentService comment.CommentService) *Handler {
+	return &Handler{
+		api:            api,
+		validate:       validate,
+		commentService: commentService,
+	}
+}
+
+func (h *Handler) RouteList(secretKey string) {
+	routeAuth := h.api.Group("/comments")
+	routeAuth.Use(middleware.AuthMiddleware(secretKey))
+	routeAuth.POST("/", h.CreateComment)
+}
