@@ -2,8 +2,11 @@ package main
 
 import (
 	"ChristianTertius/devbercerita/internal/config"
+	postHandler "ChristianTertius/devbercerita/internal/handler/post"
 	"ChristianTertius/devbercerita/internal/handler/user"
+	postRepo "ChristianTertius/devbercerita/internal/repository/post"
 	userRepo "ChristianTertius/devbercerita/internal/repository/user"
+	postService "ChristianTertius/devbercerita/internal/service/post"
 	userService "ChristianTertius/devbercerita/internal/service/user"
 	"ChristianTertius/devbercerita/pkg/internalsql"
 	"context"
@@ -39,12 +42,16 @@ func main() {
 	})
 
 	userRepo := userRepo.NewRepository(db)
+	postRepo := postRepo.NewPostRepository(db)
 
 	userService := userService.NewService(cfg, userRepo)
+	postService := postService.NewService(cfg, postRepo)
 
 	userHandler := user.NewHandler(r, validate, userService)
+	postHandler := postHandler.NewHandler(r, validate, postService)
 
 	userHandler.RouteList(cfg.SecretJwt)
+	postHandler.RouteList(cfg.SecretJwt)
 
 	addr := fmt.Sprintf("0.0.0.0:%s", cfg.Port)
 	srv := &http.Server{
