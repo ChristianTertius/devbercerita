@@ -4,12 +4,14 @@ import (
 	"ChristianTertius/devbercerita/internal/model"
 	"context"
 	"database/sql"
+	"time"
 )
 
 type PostRepository interface {
 	StorePost(ctx context.Context, model *model.PostModel) (int64, error)
 	GetPostById(ctx context.Context, postID int64) (*model.PostWithUserModel, error)
 	UpdatePost(ctx context.Context, model *model.PostModel, postID int64) error
+	SoftDelete(ctx context.Context, postID int64, now time.Time) error
 }
 
 type postRepository struct {
