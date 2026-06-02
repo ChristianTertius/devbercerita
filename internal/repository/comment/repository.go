@@ -13,6 +13,7 @@ type CommentRepository interface {
 	DeleteLikeComment(ctx context.Context, commentID, userID int64) error
 	StoreLikeComment(ctx context.Context, model *model.CommentLikeModel) error
 	GetCommentByPostIDs(ctx context.Context, postIDs []int64) ([]model.CommentModel, error)
+	DeleteCommentsByPostID(ctx context.Context, postID int64) error
 }
 
 type commentRepository struct {

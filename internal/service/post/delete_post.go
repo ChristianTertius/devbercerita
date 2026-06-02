@@ -22,6 +22,12 @@ func (s *postService) DeletePost(ctx context.Context, postID, userID int64) (int
 		return http.StatusNotFound, errors.New("post not found")
 	}
 
+	// delete related comments and likes before soft-deleting post
+	err = s.commentRepo.DeleteCommentsByPostID(ctx, postID)
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+
 	// soft delete post
 	err = s.postRepo.SoftDelete(ctx, postID, time.Now())
 	if err != nil {
