@@ -70,7 +70,7 @@ func main() {
 		log.Printf("server listening on :%s", addr)
 
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal("listen error: %v", err)
+			log.Fatalf("listen error: %v", err)
 		}
 	}()
 
