@@ -49,7 +49,7 @@ func main() {
 	commentRepo := commentRepo.NewRepository(db)
 
 	userService := userService.NewService(cfg, userRepo)
-	postService := postService.NewService(cfg, postRepo)
+	postService := postService.NewService(cfg, postRepo, commentRepo)
 	commentService := commentService.NewCommentService(cfg, commentRepo, postRepo)
 
 	userHandler := user.NewHandler(r, validate, userService)
