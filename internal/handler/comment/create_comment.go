@@ -7,6 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateComment creates a comment tied to a post for the current user.
+// @Summary Create a comment
+// @Tags Comments
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body dto.StoreCommentRequest true "Comment payload"
+// @Success 200 {object} dto.MessageResponse
+// @Failure 400 {object} dto.MessageResponse
+// @Failure 401 {object} dto.MessageResponse
+// @Failure 500 {object} dto.MessageResponse
+// @Router /comments [post]
 func (h *Handler) CreateComment(c *gin.Context) {
 	var (
 		ctx = c.Request.Context()
