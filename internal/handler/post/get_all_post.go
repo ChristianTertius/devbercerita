@@ -7,6 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetAllPost returns paginated post summaries.
+// @Summary List posts
+// @Description Returns paginated posts with default limit 10 and page 1.
+// @Tags Posts
+// @Produce json
+// @Param page query int false "Page number" default(1)
+// @Param limit query int false "Items per page" default(10)
+// @Success 200 {object} dto.GetAllPostResponse
+// @Failure 400 {object} dto.MessageResponse
+// @Failure 500 {object} dto.MessageResponse
+// @Router /posts [get]
 func (h *Handler) GetAllPost(c *gin.Context) {
 	ctx := c.Request.Context()
 	pageStr := c.DefaultQuery("page", "1")

@@ -8,6 +8,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UpdatePost modifies an existing post that belongs to the authenticated user.
+// @Summary Update a post
+// @Description Update the title or content of an owned post.
+// @Tags Posts
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param post_id path int true "Post ID"
+// @Param request body dto.CreateOrUpdatePostRequest true "Updated post payload"
+// @Success 200 {object} dto.CreateOrUpdatePostResponse
+// @Failure 400 {object} dto.MessageResponse
+// @Failure 401 {object} dto.MessageResponse
+// @Failure 404 {object} dto.MessageResponse
+// @Failure 500 {object} dto.MessageResponse
+// @Router /posts/{post_id}/update [put]
 func (h *Handler) UpdatePost(c *gin.Context) {
 	var (
 		ctx = c.Request.Context()

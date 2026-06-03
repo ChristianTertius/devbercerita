@@ -7,6 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Register registers a new user account via email, username, and password.
+// @Summary Register a new user
+// @Description Create an account with email, username, and password credentials.
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body dto.RegisterRequest true "Registration payload"
+// @Success 200 {object} dto.RegisterResponse
+// @Failure 400 {object} dto.MessageResponse
+// @Failure 500 {object} dto.MessageResponse
+// @Router /auth/register [post]
 func (h *Handler) Register(c *gin.Context) {
 	var (
 		ctx = c.Request.Context()

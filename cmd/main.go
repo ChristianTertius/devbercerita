@@ -1,6 +1,21 @@
+// Package main bootstraps the DevBercerita HTTP API.
+// @title DevBercerita API
+// @version 1.0
+// @description API untuk platform DevBercerita: register/login, posting, dan komentar.
+// @contact.name DevBercerita Team
+// @contact.email hi@devbercerita.local
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 package main
 
 import (
+	"ChristianTertius/devbercerita/docs"
 	"ChristianTertius/devbercerita/internal/config"
 	commentHandler "ChristianTertius/devbercerita/internal/handler/comment"
 	postHandler "ChristianTertius/devbercerita/internal/handler/post"
@@ -22,6 +37,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -59,6 +76,12 @@ func main() {
 	userHandler.RouteList(cfg.SecretJwt)
 	postHandler.RouteList(cfg.SecretJwt)
 	commentHandler.RouteList(cfg.SecretJwt)
+
+	docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%s", cfg.Port)
+	docs.SwaggerInfo.BasePath = "/"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
+	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	addr := fmt.Sprintf("0.0.0.0:%s", cfg.Port)
 	srv := &http.Server{
