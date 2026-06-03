@@ -25,6 +25,6 @@ func NewHandler(api *gin.Engine, validate *validator.Validate, commentService co
 func (h *Handler) RouteList(secretKey string) {
 	routeAuth := h.api.Group("/comments")
 	routeAuth.Use(middleware.AuthMiddleware(secretKey))
-	routeAuth.POST("/", h.CreateComment)
+	routeAuth.POST("", h.CreateComment)
 	routeAuth.POST("/action", h.LikeOrUnlikeComment)
 }
