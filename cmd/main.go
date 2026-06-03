@@ -31,10 +31,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/swaggo/files"
@@ -52,12 +55,28 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// config origin
+	origins := os.Getenv("ALLOWED_ORIGINS")
+	allowOrigins := strings.Split(origins, ",")
+
+	// local dev fallback
+	if len(allowOrigins) == 0 || allowOrigins[0] == "" {
+		allowOrigins = []string{"http://127.0.0.1:3000", "http://localhost:3000"}
+	}
+
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     allowOrigins,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "it's work! berjalan yeyeyey",
+			"message": "it's work",
 		})
 	})
 
