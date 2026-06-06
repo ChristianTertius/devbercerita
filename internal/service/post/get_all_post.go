@@ -9,7 +9,7 @@ import (
 
 func (s *postService) GetAllPost(ctx context.Context, param *dto.GetAllPostRequest) (*dto.GetAllPostResponse, int, error) {
 	// get all post
-	totalPost, err := s.postRepo.TotalPost(ctx)
+	totalPost, err := s.postRepo.TotalPost(ctx, param.Search)
 	if err != nil {
 		return nil, http.StatusInternalServerError, err
 	}

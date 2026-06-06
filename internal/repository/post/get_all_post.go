@@ -4,21 +4,29 @@ import (
 	"ChristianTertius/devbercerita/internal/dto"
 	"ChristianTertius/devbercerita/internal/model"
 	"context"
+	"fmt"
 )
 
 func (r *postRepository) GetAllPost(ctx context.Context, param *dto.GetAllPostRequest, offset int) ([]model.PostWithUserModel, error) {
-	query := `select 
-    p.id, p.title, p.content, p.user_id, p.created_at, p.updated_at, u.username, count(pl.id) as like_count
-    from posts as p
-    join users as u on u.id = p.user_id
-    left join post_likes as pl on pl.post_id = p.id
-    where p.deleted_at is null
-    group by p.id, p.title, p.content, p.user_id, p.created_at, p.updated_at, u.username
-    order by created_at desc
-    limit ?
-    offset ? `
+	query := fmt.Sprintf(`
+        SELECT
+            p.id, p.title, p.content, p.user_id, p.created_at, p.updated_at,
+            u.username, COUNT(pl.id) AS like_count
+        FROM posts AS p
+        JOIN users AS u ON u.id = p.user_id
+        LEFT JOIN post_likes AS pl ON pl.post_id = p.id
+        WHERE p.deleted_at IS NULL
+        %s
+        GROUP BY p.id, p.title, p.content, p.user_id, p.created_at, p.updated_at, u.username
+        ORDER BY %s %s
+        LIMIT ? OFFSET ?`,
+		searchClause(param.Search),
+		sanitizeSortBy(param.SortBy),
+		sanitizeOrder(param.Order),
+	)
 
-	rows, err := r.db.QueryContext(ctx, query, param.Limit, offset)
+	args := buildArgs(param.Search, param.Limit, int64(offset))
+	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,4 +54,33 @@ func (r *postRepository) GetAllPost(ctx context.Context, param *dto.GetAllPostRe
 	}
 
 	return result, nil
+}
+
+func searchClause(search string) string {
+	if search == "" {
+		return ""
+	}
+	return "AND (p.title LIKE ? OR p.content LIKE ?)"
+}
+
+func buildArgs(search string, limit, offset int64) []any {
+	if search != "" {
+		like := "%" + search + "%"
+		return []any{like, like, limit, offset}
+	}
+	return []any{limit, offset}
+}
+
+func sanitizeSortBy(s string) string {
+	if s == "like_count" {
+		return "like_count"
+	}
+	return "p.created_at"
+}
+
+func sanitizeOrder(o string) string {
+	if o == "asc" {
+		return "ASC"
+	}
+	return "DESC"
 }

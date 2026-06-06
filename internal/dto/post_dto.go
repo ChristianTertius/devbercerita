@@ -43,8 +43,11 @@ type (
 
 type (
 	GetAllPostRequest struct {
-		Limit int64 `param:"limit"`
-		Page  int64 `param:"page"`
+		Limit  int64  `param:"limit"`
+		Page   int64  `param:"page"`
+		Search string `form:"search"`  // filter by title/content
+		SortBy string `form:"sort_by"` // created_at | like_count
+		Order  string `form:"order"`   // asc | desc
 	}
 
 	GetAllPostResponse struct {

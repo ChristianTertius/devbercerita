@@ -2,14 +2,20 @@ package post
 
 import "context"
 
-func (r *postRepository) TotalPost(ctx context.Context) (int64, error) {
-	query := `select count(id) from posts where deleted_at is null`
+func (r *postRepository) TotalPost(ctx context.Context, search string) (int64, error) {
+	query := `
+        SELECT COUNT(p.id)
+        FROM posts AS p
+        WHERE p.deleted_at IS NULL`
 
-	var total int64
-	err := r.db.QueryRowContext(ctx, query).Scan(&total)
-	if err != nil {
-		return 0, err
+	args := []any{}
+	if search != "" {
+		query += " AND (p.title LIKE ? OR p.content LIKE ?)"
+		like := "%" + search + "%"
+		args = append(args, like, like)
 	}
 
-	return total, nil
+	var total int64
+	err := r.db.QueryRowContext(ctx, query, args...).Scan(&total)
+	return total, err
 }

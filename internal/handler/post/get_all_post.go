@@ -20,24 +20,33 @@ import (
 // @Router /posts [get]
 func (h *Handler) GetAllPost(c *gin.Context) {
 	ctx := c.Request.Context()
-	pageStr := c.DefaultQuery("page", "1")
-	limitStr := c.DefaultQuery("limit", "10")
 
-	page, _ := strconv.ParseInt(pageStr, 10, 64)
-	limit, _ := strconv.ParseInt(limitStr, 10, 64)
+	page, _ := strconv.ParseInt(c.DefaultQuery("page", "1"), 10, 64)
+	limit, _ := strconv.ParseInt(c.DefaultQuery("limit", "10"), 10, 64)
+	search := c.DefaultQuery("search", "")
+	sortBy := c.DefaultQuery("sort_by", "created_at")
+	order := c.DefaultQuery("order", "desc")
+
+	// whitelist validasi
+	if sortBy != "created_at" && sortBy != "like_count" {
+		sortBy = "created_at"
+	}
+	if order != "asc" && order != "desc" {
+		order = "desc"
+	}
 
 	param := dto.GetAllPostRequest{
-		Page:  page,
-		Limit: limit,
+		Page:   page,
+		Limit:  limit,
+		Search: search,
+		SortBy: sortBy,
+		Order:  order,
 	}
 
 	result, statusCode, err := h.postService.GetAllPost(ctx, &param)
 	if err != nil {
-		c.JSON(statusCode, gin.H{
-			"message": err.Error(),
-		})
+		c.JSON(statusCode, gin.H{"message": err.Error()})
 		return
 	}
-
 	c.JSON(statusCode, result)
 }
