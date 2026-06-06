@@ -10,6 +10,7 @@ type (
 		Username  string
 		Content   string
 		LikeCount int64
+		IsLiked   bool
 		CreatedAt time.Time
 		UpdatedAt time.Time
 	}

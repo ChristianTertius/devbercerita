@@ -17,7 +17,7 @@ func (s *postService) DetailPost(ctx context.Context, postID int64, userID int64
 	}
 
 	postIDs := []int64{postID}
-	comments, err := s.commentRepo.GetCommentByPostIDs(ctx, postIDs)
+	comments, err := s.commentRepo.GetCommentByPostIDs(ctx, postIDs, userID)
 	if err != nil {
 		return nil, http.StatusInternalServerError, err
 	}
@@ -29,6 +29,7 @@ func (s *postService) DetailPost(ctx context.Context, postID int64, userID int64
 			Username:  comment.Username,
 			Content:   comment.Content,
 			LikeCount: comment.LikeCount,
+			IsLiked:   comment.IsLiked,
 			CreatedAt: comment.CreatedAt.String(),
 			UpdatedAt: comment.UpdatedAt.String(),
 		})

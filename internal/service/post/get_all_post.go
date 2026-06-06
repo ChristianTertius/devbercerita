@@ -26,7 +26,7 @@ func (s *postService) GetAllPost(ctx context.Context, param *dto.GetAllPostReque
 	for _, post := range posts {
 		postIDs = append(postIDs, post.ID)
 	}
-	comments, err := s.commentRepo.GetCommentByPostIDs(ctx, postIDs)
+	comments, err := s.commentRepo.GetCommentByPostIDs(ctx, postIDs, 0)
 	if err != nil {
 		return nil, http.StatusInternalServerError, err
 	}
