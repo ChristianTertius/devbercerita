@@ -25,12 +25,12 @@ func NewHandler(api *gin.Engine, validate *validator.Validate, postService post.
 func (h *Handler) RouteList(secretKey string) {
 	routeAuth := h.api.Group("/posts")
 	routeAuth.Use(middleware.AuthMiddleware(secretKey))
-	routeAuth.POST("", h.CreatePost) // /posts
+	routeAuth.POST("", h.CreatePost)
 	routeAuth.PUT("/:post_id/update", h.UpdatePost)
 	routeAuth.DELETE("/:post_id/delete", h.DeletePost)
 	routeAuth.POST("/action", h.LikeOrUnlikePost)
 
 	routeWithoutAuth := h.api.Group("/posts")
-	routeWithoutAuth.GET("/:post_id/detail", h.DetailPost)
-	routeWithoutAuth.GET("", h.GetAllPost) // /posts
+	routeWithoutAuth.GET("/:post_id/detail", middleware.OptionalAuthMiddleware(secretKey), h.DetailPost)
+	routeWithoutAuth.GET("", h.GetAllPost)
 }

@@ -13,7 +13,7 @@ type PostService interface {
 	UpdatePost(ctx context.Context, req *dto.CreateOrUpdatePostRequest, postID, userID int64) (int, error)
 	DeletePost(ctx context.Context, postID, userID int64) (int, error)
 	LikeOrUnlikePost(ctx context.Context, postID, userID int64) (int, error)
-	DetailPost(ctx context.Context, postID int64) (*dto.DetailPostResponse, int, error)
+	DetailPost(ctx context.Context, postID int64, userID int64) (*dto.DetailPostResponse, int, error)
 	GetAllPost(ctx context.Context, param *dto.GetAllPostRequest) (*dto.GetAllPostResponse, int, error)
 }
 

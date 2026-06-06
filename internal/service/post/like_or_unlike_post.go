@@ -10,7 +10,7 @@ import (
 
 func (s *postService) LikeOrUnlikePost(ctx context.Context, postID, userID int64) (int, error) {
 	// check post was exists
-	postExist, err := s.postRepo.GetPostById(ctx, postID)
+	postExist, err := s.postRepo.GetPostById(ctx, postID, 0)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

@@ -23,6 +23,7 @@ type (
 		Username  string `json:"username"`
 		Content   string `json:"content"`
 		LikeCount int64  `json:"like_count"`
+		IsLiked   bool   `json:"is_liked"`
 		CreatedAt string `json:"created_at"`
 		UpdatedAt string `json:"updated_at"`
 	}
@@ -33,6 +34,7 @@ type (
 		Username  string    `json:"username"`
 		Content   string    `json:"content"`
 		LikeCount int64     `json:"like_count"`
+		IsLiked   bool      `json:"is_liked"`
 		Comments  []Comment `json:"comments"`
 		CreatedAt string    `json:"created_at"`
 		UpdatedAt string    `json:"updated_at"`

@@ -22,20 +22,22 @@ func (h *Handler) DetailPost(c *gin.Context) {
 	postIDParam := c.Param("post_id")
 	postID, err := strconv.ParseInt(postIDParam, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err.Error(),
-		})
-
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
-	result, statusCode, err := h.postService.DetailPost(ctx, postID)
+	// ambil userID dari token, default 0 kalau belum login
+	var userID int64
+	if id, exists := c.Get("userID"); exists {
+		if uid, ok := id.(int64); ok {
+			userID = uid
+		}
+	}
+
+	result, statusCode, err := h.postService.DetailPost(ctx, postID, userID)
 	if err != nil {
-		c.JSON(statusCode, gin.H{
-			"message": err.Error(),
-		})
+		c.JSON(statusCode, gin.H{"message": err.Error()})
 		return
 	}
-
 	c.JSON(statusCode, result)
 }

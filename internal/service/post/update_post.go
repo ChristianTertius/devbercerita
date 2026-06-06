@@ -11,7 +11,7 @@ import (
 
 func (s *postService) UpdatePost(ctx context.Context, req *dto.CreateOrUpdatePostRequest, postID, userID int64) (int, error) {
 	// check if post was exist
-	postExists, err := s.postRepo.GetPostById(ctx, postID)
+	postExists, err := s.postRepo.GetPostById(ctx, postID, 0)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

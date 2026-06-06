@@ -10,7 +10,7 @@ import (
 
 type PostRepository interface {
 	StorePost(ctx context.Context, model *model.PostModel) (int64, error)
-	GetPostById(ctx context.Context, postID int64) (*model.PostWithUserModel, error)
+	GetPostById(ctx context.Context, postID int64, userID int64) (*model.PostWithUserModel, error)
 	UpdatePost(ctx context.Context, model *model.PostModel, postID int64) error
 	SoftDelete(ctx context.Context, postID int64, now time.Time) error
 	IsUserAlreadyLikePost(ctx context.Context, postID, userID int64) (bool, error)

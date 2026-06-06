@@ -11,7 +11,7 @@ import (
 
 func (s *commentService) CreateComment(ctx context.Context, req *dto.StoreCommentRequest, userID int64) (int, error) {
 	// check if post was exists
-	postExist, err := s.postRepo.GetPostById(ctx, req.PostID)
+	postExist, err := s.postRepo.GetPostById(ctx, req.PostID, 0)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

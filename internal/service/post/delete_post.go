@@ -9,7 +9,7 @@ import (
 
 func (s *postService) DeletePost(ctx context.Context, postID, userID int64) (int, error) {
 	// check post was exists
-	postExists, err := s.postRepo.GetPostById(ctx, postID)
+	postExists, err := s.postRepo.GetPostById(ctx, postID, 0)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
