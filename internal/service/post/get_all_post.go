@@ -45,7 +45,8 @@ func (s *postService) GetAllPost(ctx context.Context, param *dto.GetAllPostReque
 	}
 
 	// mapping response
-	var data []dto.DetailPostResponse
+	// var data []dto.DetailPostResponse
+	data := make([]dto.DetailPostResponse, 0)
 	for _, post := range posts {
 		comments := commentsMap[post.ID]
 		if len(comments) == 0 {
